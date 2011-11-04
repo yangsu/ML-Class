@@ -28,7 +28,7 @@ grad = zeros(size(theta));
 %       the cost function and gradient computations. 
 %
 h = sigmoid(X * theta);
-theta2 = theta(2:end)
+theta2 = theta(2:end);
 J = 1/m * sum(-y .* log(h) - (1-y) .* log(1-h)) + lambda/(2*m) * sum(theta2.^2);
 
 % Hint: When computing the gradient of the regularized cost function, 
