@@ -29,7 +29,7 @@ grad = zeros(size(theta));
 %
 h = sigmoid(X * theta);
 theta2 = theta(2:end)
-J = 1/m * sum(-y .* log(h) - (1 - y) .* log(1 - h)) + lambda/(2*m) * sum(theta2.^2);
+J = 1/m * sum(-y .* log(h) - (1-y) .* log(1-h)) + lambda/(2*m) * sum(theta2.^2);
 
 % Hint: When computing the gradient of the regularized cost function, 
 %       there're many possible vectorized solutions, but one solution
@@ -40,7 +40,7 @@ J = 1/m * sum(-y .* log(h) - (1 - y) .* log(1 - h)) + lambda/(2*m) * sum(theta2.
 %           grad = grad + YOUR_CODE_HERE (using the temp variable)
 %
 
-grad = 1/m * X' * (h - y);
+grad = 1/m * X' * (h-y);
 grad = grad + lambda/m * [0; theta2];
 
 % =============================================================
