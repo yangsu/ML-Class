@@ -42,11 +42,12 @@ Theta2_grad = zeros(size(Theta2));
 % Add ones to the X data matrix
 X = [ones(m, 1) X];
 % Compute layer 2 (hidden layer)
-a2 = sigmoid(X * Theta1');
-a2 = [ones(size(a2, 1), 1) a2];
+z2 = X * Theta1';
+a2 = [ones(size(z2, 1), 1) sigmoid(z2)];
 
 % Compute layer 3 (output layer)
-a3 = sigmoid(a2 * Theta2');
+z3 = a2 * Theta2';
+a3 = sigmoid(z3);
 
 vy = zeros(size(y), num_labels);
 for i=1:m
@@ -71,6 +72,11 @@ J += lambda/(2*m) * (sum(sum(Theta1(:,2:end).^2)) + sum(sum(Theta2(:,2:end).^2))
 %               over the training examples if you are implementing it for the 
 %               first time.
 
+delta3 = a3 - vy;
+delta2 = delta3 * Theta2 .* [ones(size(z2, 1), 1) sigmoidGradient(z2)];
+delta2 = delta2(:, 2:end);
+Theta1_grad = Theta1_grad + delta2' * X;
+Theta2_grad = Theta2_grad + delta3' * a2;
 
 % Part 3: Implement regularization with the cost function and gradients.
 %
@@ -79,24 +85,10 @@ J += lambda/(2*m) * (sum(sum(Theta1(:,2:end).^2)) + sum(sum(Theta2(:,2:end).^2))
 %               the regularization separately and then add them to Theta1_grad
 %               and Theta2_grad from Part 2.
 %
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+zeros1 = zeros(size(Theta1_grad, 1),1);
+zeros2 = zeros(size(Theta2_grad, 1),1);
+Theta1_grad = 1/m .* Theta1_grad + [zeros1 lambda/m.*Theta1(:, 2:end)];
+Theta2_grad = 1/m .* Theta2_grad + [zeros2 lambda/m.*Theta2(:, 2:end)];
 
 % -------------------------------------------------------------
 
