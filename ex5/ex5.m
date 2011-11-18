@@ -218,3 +218,12 @@ end
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
+
+%% =========== Part 9: Computing Test Set Error =============
+
+[num, index] = min(error_val);
+theta = trainLinearReg(X_poly, y, lambda_vec(index));
+error_test = linearRegCostFunction(X_poly_test, ytest, theta, 0);
+fprintf('Test Set Error with best lambda of value(%f): %f\n', ...
+        lambda_vec(index), error_test);
+
