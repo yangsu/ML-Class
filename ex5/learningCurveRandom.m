@@ -1,5 +1,5 @@
 function [error_train, error_val] = ...
-    learningCurve(X, y, Xval, yval, lambda)
+    learningCurveRandom(X, y, Xval, yval, lambda, repeats)
 %LEARNINGCURVE Generates the train and cross validation set errors needed 
 %to plot a learning curve
 %   [error_train, error_val] = ...
@@ -16,6 +16,9 @@ function [error_train, error_val] = ...
 
 % Number of training examples
 m = size(X, 1);
+
+% Number of validation examples
+n = size(Xval, 1);
 
 % You need to return these values correctly
 error_train = zeros(m, 1);
@@ -43,13 +46,28 @@ error_val   = zeros(m, 1);
 %       the training to obtain the theta parameters.
 %
 
+% Compute train/cross validation errors using training examples 
 for i = 1:m
-    % Compute train/cross validation errors using training examples 
-    tx = X(1:i, :);
-    ty = y(1:i);
+  errval = 0;
+  errtrain = 0;
+  for j=1:repeats
+    % Randomly select i numbers from the training set
+    indices = randperm(m)(1:i);
+    tx = X(indices, :);
+    ty = y(indices);
+    
     theta = trainLinearReg(tx, ty, lambda);
-    error_train(i) = linearRegCostFunction(tx, ty, theta, 0);
-    error_val(i) = linearRegCostFunction(Xval, yval, theta, 0);
+    errtrain += linearRegCostFunction(tx, ty, theta, 0);
+
+    % Randomly select i numbers from the validation set
+    indices = randperm(n)(1:i);
+    txval = Xval(indices, :);
+    tyval = yval(indices);
+    
+    errval += linearRegCostFunction(txval, tyval, theta, 0);
+  end
+  error_train(i) = errtrain/repeats;
+  error_val(i) = errval/repeats;
 end
 
 % -------------------------------------------------------------
