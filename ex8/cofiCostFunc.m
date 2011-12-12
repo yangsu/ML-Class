@@ -40,9 +40,11 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
-temp = (X * Theta' - Y).^2;
-J = 1/2 * sum(temp(R == 1));
+temp = (X * Theta' - Y) .* R;
+J = 1/2 * sum(sum(temp.^2));
 
+X_grad = (temp * Theta);
+Theta_grad = (temp' * X);
 
 % =============================================================
 
